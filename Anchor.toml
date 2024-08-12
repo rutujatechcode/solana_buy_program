@@ -5,7 +5,7 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-solana_buy_program = "Hktf94z7aAKJkTaBmaRLe5WZyLsWXQws3TvCkwCEsEbp"
+solana_buy_program = "3y7L66k8qA63gxjTdfjZCFpNZBFQWdtskGQhThBspzxy"
 
 [registry]
 url = " https://api.devnet.solana.com"

@@ -1,12 +1,12 @@
 use anchor_lang::prelude::*;
 
-declare_id!("Hktf94z7aAKJkTaBmaRLe5WZyLsWXQws3TvCkwCEsEbp");
+declare_id!("3y7L66k8qA63gxjTdfjZCFpNZBFQWdtskGQhThBspzxy");
 
 #[program]
 pub mod solana_buy_program {
     use super::*;
 
-    pub fn buy(ctx: Context<Buy>, id: String, amount: u64) -> Result<()> {
+    pub fn buy(ctx: Context<Buy>, id: u64, amount: u64) -> Result<()> {
         let ix = anchor_lang::solana_program::system_instruction::transfer(
             &ctx.accounts.buyer.key(),
             &ctx.accounts.contract.key(),
@@ -21,28 +21,18 @@ pub mod solana_buy_program {
         )?;
         
         emit!(TransactionSuccess { 
-            id, 
+            id,
             amount, 
             buyer: *ctx.accounts.buyer.key, 
-            tx_hash: ctx.accounts.buyer.key().to_string() 
         });
 
-        Ok(())
-    }
-
-    pub fn withdraw(ctx: Context<Withdraw>, amount: u64) -> Result<()> {
-        let ix = anchor_lang::solana_program::system_instruction::transfer(
-            &ctx.accounts.contract.key(),
-            &ctx.accounts.admin.key(),
-            amount,
+        // Print the success message with user address, id, and amount
+        msg!(
+            "User: {}, ID: {}, Amount: {}",
+            *ctx.accounts.buyer.key,
+            id,
+            amount
         );
-        anchor_lang::solana_program::program::invoke(
-            &ix,
-            &[
-                ctx.accounts.contract.to_account_info(),
-                ctx.accounts.admin.to_account_info(),
-            ],
-        )?;
 
         Ok(())
     }
@@ -57,19 +47,10 @@ pub struct Buy<'info> {
     pub system_program: Program<'info, System>,
 }
 
-#[derive(Accounts)]
-pub struct Withdraw<'info> {
-    #[account(mut)]
-    pub admin: Signer<'info>,
-    #[account(mut)]
-    pub contract: SystemAccount<'info>,
-    pub system_program: Program<'info, System>,
-}
 
 #[event]
 pub struct TransactionSuccess {
-    pub id: String,
+    pub id: u64,
     pub amount: u64,
     pub buyer: Pubkey,
-    pub tx_hash: String,
 }
