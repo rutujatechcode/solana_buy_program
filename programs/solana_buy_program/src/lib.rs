@@ -1,12 +1,13 @@
 use anchor_lang::prelude::*;
 
-declare_id!("3y7L66k8qA63gxjTdfjZCFpNZBFQWdtskGQhThBspzxy");
+declare_id!("6vHqCFRNUDq6NDAMb3bzowvMTvthYBFnwPguCVmC9s53");
 
 #[program]
 pub mod solana_buy_program {
     use super::*;
 
     pub fn buy(ctx: Context<Buy>, id: u64, amount: u64) -> Result<()> {
+        require!(amount > 0, ErrorCode::InvalidAmount);
         let ix = anchor_lang::solana_program::system_instruction::transfer(
             &ctx.accounts.buyer.key(),
             &ctx.accounts.contract.key(),
@@ -47,10 +48,15 @@ pub struct Buy<'info> {
     pub system_program: Program<'info, System>,
 }
 
-
 #[event]
 pub struct TransactionSuccess {
     pub id: u64,
     pub amount: u64,
     pub buyer: Pubkey,
+}
+
+#[error_code]
+pub enum ErrorCode {
+    #[msg("Invalid amount")]
+    InvalidAmount,
 }
