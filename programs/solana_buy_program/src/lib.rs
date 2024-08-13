@@ -1,12 +1,12 @@
 use anchor_lang::prelude::*;
 
-declare_id!("6vHqCFRNUDq6NDAMb3bzowvMTvthYBFnwPguCVmC9s53");
+declare_id!("9AKAQ7YUedC5wzSGkiNDbS6jVQwhCLNL1rGw6w9X6MkS");
 
 #[program]
 pub mod solana_buy_program {
     use super::*;
 
-    pub fn buy(ctx: Context<Buy>, id: u64, amount: u64) -> Result<()> {
+    pub fn buy(ctx: Context<Buy>, id: u64, amount: u64, telegramid: u64) -> Result<()> {
         require!(amount > 0, ErrorCode::InvalidAmount);
         let ix = anchor_lang::solana_program::system_instruction::transfer(
             &ctx.accounts.buyer.key(),
@@ -23,15 +23,17 @@ pub mod solana_buy_program {
         
         emit!(TransactionSuccess { 
             id,
+            telegramid,
             amount, 
             buyer: *ctx.accounts.buyer.key, 
         });
 
         // Print the success message with user address, id, and amount
         msg!(
-            "User: {}, ID: {}, Amount: {}",
+            "User: {}, ID: {}, TelegramId: {}, Amount: {}",
             *ctx.accounts.buyer.key,
             id,
+            telegramid,
             amount
         );
 
@@ -51,6 +53,7 @@ pub struct Buy<'info> {
 #[event]
 pub struct TransactionSuccess {
     pub id: u64,
+    pub telegramid:u64,
     pub amount: u64,
     pub buyer: Pubkey,
 }

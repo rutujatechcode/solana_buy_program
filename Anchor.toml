@@ -5,10 +5,10 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-solana_buy_program = "6vHqCFRNUDq6NDAMb3bzowvMTvthYBFnwPguCVmC9s53"
+solana_buy_program = "9AKAQ7YUedC5wzSGkiNDbS6jVQwhCLNL1rGw6w9X6MkS"
 
 [registry]
-url = " https://api.devnet.solana.com"
+url = "https://api.devnet.solana.com"
 
 [provider]
 cluster = "Devnet"
